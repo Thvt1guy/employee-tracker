@@ -1,7 +1,27 @@
-function menu() {
-  //use inquirer to ask the user to select something
+const inquirer = require('inquirer');
+const mysql = require('mysql2/promise');
+var connection;
 
-  switch (key) {
+async function main() {
+    // get the client
+    // create the connection
+    try {
+        
+        connection = await mysql.createConnection({port: 3307, host:'localhost', user: 'root', password: 'Alove6262!', database: 'mycompany_db'});
+        // query database
+        const [rows, fields] = await connection.execute('SELECT * FROM department');
+        console.log(rows)
+        app()
+    } catch (error) {
+        console.log(error)
+    }
+}
+const {menuQs,addDepartmentQs, addEmployeeQs,addRoleQs} = require("./questions.js")
+async function app() {
+  //use inquirer to ask the user to select something
+    var {menu} = await inquirer
+    .prompt(menuQs)
+  switch (menu) {
     case "View all departments":
       viewDepartments();
       break;
@@ -20,7 +40,6 @@ function menu() {
     case "Add an employee":
       addEmployee();
       break;
-
     default:
         console.log("Thanks for using our app!")
       break;
@@ -28,23 +47,25 @@ function menu() {
 }
 
 
-function viewDepartments(){
+async function viewDepartments(){
     console.log("Viewing depts")
+    const [rows, fields] = await connection.execute('SELECT * FROM department');
+    console.log(rows)
 
     //when I am done
-    menu()
+    app()
 }
 function viewRoles(){
     console.log("Viewing roles")
 
     //when I am done
-    menu()
+    app()
 }
 function viewEmployees(){
     console.log("Viewing emps")
 
     //when I am done
-    menu()
+    app()
 }
 function addDepartment(){
     console.log("Add depts")
@@ -64,3 +85,5 @@ function addEmployee(){
     //when I am done
     viewEmployees()
 }
+
+main()
