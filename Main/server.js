@@ -1,25 +1,30 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2/promise');
-var connection;
+const MYSQLPORT = process.env.MYSQLPORT || 3307;
+const cTable = require('console.table');
+const pass = require('./config');
+const {menuQs, addDepartmentQs, addEmployeeQs, addRoleQs} = require("./questions.js")
 
-async function main() {
-    // get the client
-    // create the connection
-    try {
-        
-        connection = await mysql.createConnection({port: 3307, host:'localhost', user: 'root', password: 'Alove6262!', database: 'mycompany_db'});
-        // query database
-        const [rows, fields] = await connection.execute('SELECT * FROM department');
-        console.log(rows)
-        app()
-    } catch (error) {
-        console.log(error)
-    }
-}
-const {menuQs,addDepartmentQs, addEmployeeQs,addRoleQs} = require("./questions.js")
-async function app() {
+
+// function main() {
+  // get the client
+  // create the connection
+  const connection = mysql.createConnection(
+    {
+      port: MYSQLPORT,
+      host: "localhost",
+      user: "root",
+      password: `${pass}`,
+      database: "mycompany_db",
+    },
+    // app();
+  console.log("Connected to database!")
+  );
+
+
+function app() {
   //use inquirer to ask the user to select something
-    var {menu} = await inquirer
+    var {menu} = inquirer
     .prompt(menuQs)
   switch (menu) {
     case "View all departments":
@@ -47,13 +52,21 @@ async function app() {
 }
 
 
-async function viewDepartments(){
+function viewDepartments(){
     console.log("Viewing depts")
-    const [rows, fields] = await connection.execute('SELECT * FROM department');
-    console.log(rows)
+      connection.query('SELECT name FROM department', (err, results)=>{
+      try{
+      console.table(results)
+      //when I am done
+      // app()
+      } catch(err){
+        console.log(err);
+      }
 
-    //when I am done
-    app()
+    });
+    
+
+
 }
 function viewRoles(){
     console.log("Viewing roles")
@@ -86,4 +99,6 @@ function addEmployee(){
     viewEmployees()
 }
 
-main()
+
+app();
+// main()

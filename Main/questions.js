@@ -3,7 +3,7 @@ module.exports ={
         type: 'list',
         name: 'menu',
         message: 'Select an option to start',
-        choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Update employee role', 'Quit'],
+        choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role','Add an employee', 'Update employee role', 'Quit'],
     }],
     addDepartmentQs: [],
     addRoleQs: [],
