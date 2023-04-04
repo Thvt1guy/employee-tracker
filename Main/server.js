@@ -16,28 +16,6 @@ function init() {
                 message: 'Select an option to start.',
                 choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update employee role', 'Quit'],
             },
-            // {
-            //     type: 'maxlength-input',
-            //     name: 'text',
-            //     message: 'What will be your text?',
-            //     maxLength: 3
-            // },
-            // {
-            //     type: 'input',
-            //     name: 'textColor',
-            //     message: 'What will be your text color?'
-            // },
-            // {
-            //     type: 'list',
-            //     name: 'shapeType',
-            //     message: 'Choose a shape.',
-            //     choices: ['Circle', 'Triangle', 'Square'],
-            // },
-            // {
-            //     type: 'input',
-            //     name: 'shapeColor',
-            //     message: 'What will be your shape\'s color?'
-            // }
         ])
         .then((name) => {
             let menu = name.menu;
@@ -48,6 +26,7 @@ function init() {
                     viewDepartments();
                     break;
                 case "View all roles":
+                    // console.log('!!Roles switch ran!!');
                     viewRoles();
                     break;
                 case "View all employees":
@@ -86,7 +65,7 @@ const db = mysql.createConnection(
 
 
 function viewDepartments(){
-    console.log("Viewing depts")
+    console.log("Viewing Departments")
         db.query('SELECT name FROM department', function (err, results)
       {
       console.table(results)
@@ -95,4 +74,50 @@ function viewDepartments(){
     });
 }
 
+function viewRoles(){
+    console.log("Viewing Roles")
+        db.query('SELECT * FROM role', function (err, results)
+      {
+      console.table(results)
+      //when I am done
+      init();
+    });
+}
+
+function viewEmployees(){
+    console.log("Viewing Employees")
+        db.query(`SELECT employee_id, first_name, last_name, title, name, salary, manager_id
+        FROM role r
+        JOIN employee e
+            ON r.id = e.role_id
+        JOIN department d
+            ON r.department_id = d.department_id;`, function (err, results)
+      {
+      console.table(results)
+      //when I am done
+      init();
+    });
+}
+
+function addDepartment(){
+    console.log("Department Added")
+        db.query(`SELECT * FROM role`, function (err, results)
+      {
+      console.table(results)
+      //when I am done
+      init();
+    });
+}
+
+
 init();
+
+
+// WHEN I choose to add a department
+// THEN I am prompted to enter the name of the department and that department is added to the database
+// WHEN I choose to add a role
+// THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+// WHEN I choose to add an employee
+// THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+// WHEN I choose to update an employee role
+// THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
