@@ -86,7 +86,7 @@ function viewRoles(){
 
 function viewEmployees(){
     console.log("Viewing Employees")
-        db.query(`SELECT employee_id, first_name, last_name, title, name, salary, manager_id
+        db.query(`SELECT employee_id, first_name, last_name, title AS job_title, name AS department, salary, manager_id
         FROM role r
         JOIN employee e
             ON r.id = e.role_id
@@ -99,22 +99,66 @@ function viewEmployees(){
     });
 }
 
-function addDepartment(){
+function addDepartment() {
+
     console.log("Department Added")
-        db.query(`SELECT * FROM role`, function (err, results)
-      {
-      console.table(results)
-      //when I am done
-      init();
-    });
+        inquirer
+        .prompt([{
+            type: 'input',
+            name: 'addDep',
+            message: 'What will be the name of your new department?'
+        }
+    ])
+    
+    .then((DepName)=> {
+        // console.log(DepName.addDep);
+        db.query(`INSERT INTO department (name)
+        VALUES ("${DepName.addDep}");`, function (err, results) {
+          console.table(results)
+          //when I am done
+          init();
+        });
+    })
+
+
+}
+
+function addRole(){
+
+    console.log("Role Added")
+        inquirer
+        .prompt([{
+            type: 'input',
+            name: 'addRole',
+            message: 'What will be the title of your new role?'
+        },
+        {
+            type: 'input',
+            name: 'addSal',
+            message: 'What will be the salary of your new role?'
+        },
+        {
+            type: 'input',
+            name: 'addRoleId',
+            message: 'What will be the Department id that you will reference for your new role?'
+        }
+    ]).then((DepName)=> {
+        // console.log(DepName.addDep);
+        db.query(`INSERT INTO role (title, salary, department_id)
+        VALUES (\"${DepName.addRole}\", ${DepName.addSal}, ${DepName.addRoleId});`, function (err, results) {
+          console.table(results)
+          //when I am done
+          init();
+        });
+    })
+
+
 }
 
 
 init();
 
 
-// WHEN I choose to add a department
-// THEN I am prompted to enter the name of the department and that department is added to the database
 // WHEN I choose to add a role
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
 // WHEN I choose to add an employee

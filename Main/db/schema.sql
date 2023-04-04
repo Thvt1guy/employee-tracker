@@ -4,7 +4,7 @@ CREATE DATABASE mycompany_db;
 USE mycompany_db;
 
 CREATE TABLE department(
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  department_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30)
 );
 
@@ -14,7 +14,7 @@ CREATE TABLE role(
   salary DECIMAL NOT NULL,
   department_id INT,
   FOREIGN KEY (department_id)
-  REFERENCES department(id)
+  REFERENCES department(department_id)
   ON DELETE SET NULL
 );
 
