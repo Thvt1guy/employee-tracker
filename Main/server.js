@@ -1,104 +1,98 @@
 const inquirer = require('inquirer');
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2');
 const MYSQLPORT = process.env.MYSQLPORT || 3307;
-const cTable = require('console.table');
 const pass = require('./config');
-const {menuQs, addDepartmentQs, addEmployeeQs, addRoleQs} = require("./questions.js")
+const cTable = require('console.table');
 
 
-// function main() {
-  // get the client
-  // create the connection
-  const connection = mysql.createConnection(
+
+
+function init() {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: 'menu',
+                message: 'Select an option to start.',
+                choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update employee role', 'Quit'],
+            },
+            // {
+            //     type: 'maxlength-input',
+            //     name: 'text',
+            //     message: 'What will be your text?',
+            //     maxLength: 3
+            // },
+            // {
+            //     type: 'input',
+            //     name: 'textColor',
+            //     message: 'What will be your text color?'
+            // },
+            // {
+            //     type: 'list',
+            //     name: 'shapeType',
+            //     message: 'Choose a shape.',
+            //     choices: ['Circle', 'Triangle', 'Square'],
+            // },
+            // {
+            //     type: 'input',
+            //     name: 'shapeColor',
+            //     message: 'What will be your shape\'s color?'
+            // }
+        ])
+        .then((name) => {
+            let menu = name.menu;
+            // console.log(name)
+            switch (menu) {
+                case "View all departments":
+                    // console.log('!!Department switch ran!!');
+                    viewDepartments();
+                    break;
+                case "View all roles":
+                    viewRoles();
+                    break;
+                case "View all employees":
+                    viewEmployees();
+                    break;
+                case "Add a department":
+                    addDepartment();
+                    break;
+                case "Add a role":
+                    addRole();
+                    break;
+                case "Add an employee":
+                    addEmployee();
+                    break;
+                default:
+                    console.log("Thanks for using our app!")
+                    break;
+            }
+        })
+}
+
+
+
+//connecting to my database
+const db = mysql.createConnection(
     {
-      port: MYSQLPORT,
-      host: "localhost",
-      user: "root",
-      password: `${pass}`,
-      database: "mycompany_db",
+        port: MYSQLPORT,
+        host: "localhost",
+        user: "root",
+        password: `${pass}`,
+        database: "mycompany_db",
     },
     // app();
-  console.log("Connected to database!")
-  );
-
-
-function app() {
-  //use inquirer to ask the user to select something
-    var {menu} = inquirer
-    .prompt(menuQs)
-  switch (menu) {
-    case "View all departments":
-      viewDepartments();
-      break;
-    case "View all roles":
-      viewRoles();
-      break;
-    case "View all employees":
-      viewEmployees();
-      break;
-    case "Add a department":
-      addDepartment();
-      break;
-    case "Add a role":
-      addRole();
-      break;
-    case "Add an employee":
-      addEmployee();
-      break;
-    default:
-        console.log("Thanks for using our app!")
-      break;
-  }
-}
+    console.log("Connected to mycompany_db!")
+);
 
 
 function viewDepartments(){
     console.log("Viewing depts")
-      connection.query('SELECT name FROM department', (err, results)=>{
-      try{
+        db.query('SELECT name FROM department', function (err, results)
+      {
       console.table(results)
       //when I am done
-      // app()
-      } catch(err){
-        console.log(err);
-      }
-
+      init();
     });
-    
-
-
-}
-function viewRoles(){
-    console.log("Viewing roles")
-
-    //when I am done
-    app()
-}
-function viewEmployees(){
-    console.log("Viewing emps")
-
-    //when I am done
-    app()
-}
-function addDepartment(){
-    console.log("Add depts")
-
-    //when I am done
-    viewDepartments()
-}
-function addRole(){
-    console.log("add role")
-
-    //when I am done
-    viewRoles()
-}
-function addEmployee(){
-    console.log("add emps")
-
-    //when I am done
-    viewEmployees()
 }
 
-
-app();
-// main()
+init();
