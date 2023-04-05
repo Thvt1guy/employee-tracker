@@ -44,8 +44,6 @@ function init() {
         })
 }
 
-
-
 //connecting to my database
 const db = mysql.createConnection(
     {
@@ -195,4 +193,3 @@ function updateRole(){
 }
 
 init();
-
