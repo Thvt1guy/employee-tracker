@@ -38,7 +38,7 @@ function init() {
                     updateRole();
                     break;
                 default:
-                    console.log("Thanks for using our app!")
+                    console.log("Thanks for using our app! \"Ctrl + C\" to use Terminal again")
                     break;
             }
         })
@@ -141,37 +141,58 @@ function addRole(){
 }
 
 function addEmployee(){
-    console.log("Role Added")
+    console.log("Employee Added")
         inquirer
         .prompt([{
             type: 'input',
-            name: 'addRole',
-            message: 'What will be the title of your new role?'
+            name: 'addFirst',
+            message: 'What will be the employee\'s first name?'
         },
         {
             type: 'input',
-            name: 'addSal',
-            message: 'What will be the salary of your new role?'
+            name: 'addLast',
+            message: 'What will be the employee\'s last name?'
         },
         {
             type: 'input',
             name: 'addRoleId',
-            message: 'What will be the Department id that you will reference for your new role?'
+            message: 'What will be the Role id that your employee will have?'
         }
     ]).then((DepName)=> {
         // console.log(DepName.addDep);
-        db.query(`INSERT INTO role (title, salary, department_id)
-        VALUES (\"${DepName.addRole}\", ${DepName.addSal}, ${DepName.addRoleId});`, function (err, results) {
-          console.table(results)
+        db.query(`INSERT INTO employee (first_name, last_name, role_id)
+        VALUES (\"${DepName.addFirst}\", \"${DepName.addLast}\", ${DepName.addRoleId});`, function (err, results) {
+          console.table(results);
           //when I am done
           init();
         });
     })
 }
 
+function updateRole(){
+    console.log("Employee Role Updated")
+    inquirer
+    .prompt([{
+        type: 'input',
+        name: 'upId',
+        message: 'What will be the employee\'s id?'
+    },
+    {
+        type: 'input',
+        name: 'upRole',
+        message: 'What will be the employee\'s new role id?'
+    }
+]).then((DepName)=> {
+    // console.log(DepName.addDep);
+    db.query(`UPDATE employee
+    SET role_id = ${DepName.upRole}
+    WHERE employee_id = ${DepName.upId};`, function (err, results) {
+      console.table(results);
+      //when I am done
+      init();
+    });
+})
+}
+
 init();
 
-// WHEN I choose to add an employee
-// THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-// WHEN I choose to update an employee role
-// THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
