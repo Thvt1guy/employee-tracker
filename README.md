@@ -52,7 +52,7 @@
   ## Contributing
   [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
   ## Tests
-  [Example of the Employee Tracker being used](https://www.youtube.com/watch?v=YE05F95K6rA&ab_channel=Thvt1guy)
+  [Example of the Employee Tracker being used](https://www.youtube.com/watch?v=fRqMpCu_WNA&ab_channel=Thvt1guy)
   ## Questions
   https://github.com/Thvt1guy
 
